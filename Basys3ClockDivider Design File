@@ -1,0 +1,21 @@
+module Basys3ClockDivider(input clk, output clk_div);
+reg[25:0] counter_reg;
+reg clk_out_reg = 0;
+always @(posedge clk)
+begin
+if(counter_reg == 49_999_999) begin
+    counter_reg  = 0;
+    clk_out_reg = ~clk_out_reg;
+    end
+else 
+    counter_reg = counter_reg + 1;
+end
+
+assign clk_div = clk_out_reg;
+endmodule
+
+// I will explain the code here and in the read me. The basys3FPGA has a 100Mhz clock which we will add in the XDC file here there is input which is will be the 100MHz clock and our 1hz output clock
+//we have added a counter which will count upto 49 million, because we started from 0, we count till 50 million because that is half of 100Mhz and during that half we want to make our clock be off
+//when it reaches 50 million it becomes 1 till the next 50  million making.
+// T = 50 million into 10ns = 0.5 seconds for 0.5 seconds our clock is on and for the other 0.5 on so the total T is 1 seconds
+// F = 1/1seconds = 1Hz.
